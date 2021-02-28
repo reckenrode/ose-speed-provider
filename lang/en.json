@@ -1,0 +1,9 @@
+{
+  "ose-speed-provider": {
+    "speeds": {
+      "base": "base movement speed",
+      "encounter": "encounter movement speed",
+      "fighting-withdrawl": "fighting withdrawl speed"
+    }
+  }
+}
