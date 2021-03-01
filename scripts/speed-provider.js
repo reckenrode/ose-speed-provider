@@ -31,7 +31,29 @@ Hooks.once("dragRuler.ready", (SpeedProvider) => {
       || rect1[3] < rect2[1]);
   }
 
-  function isInMelee(token, combat) {
+  function getCenters(token) {
+    const centers = [];
+    for (let x = 0; x < token.width; ++x) {
+      for (let y = 0; y < token.height; ++y) {
+        centers.push([
+          token.x + GRID_HEIGHT / 2 + GRID_HEIGHT * x,
+          token.y + GRID_HEIGHT / 2 + GRID_HEIGHT * y,
+        ]);
+      }
+    }
+    return centers;
+  }
+
+  function canReach(token, target, walls) {
+    const tokenCenters = getCenters(token);
+    const targetCenters = getCenters(target);
+    const rays = tokenCenters.flatMap(c => targetCenters.map(t => Ray.fromArrays(c, t)));
+    return rays.reduce((result, r) => {
+      return result || !walls.reduce((result, w) => result || r.intersectSegment(w.c), false);
+    }, false);
+  }
+
+  function isInMelee(token, combat, ctx) {
     const mySquare = [
       token.x, token.y,
       token.x + token.width * GRID_SIZE, token.y + token.height * GRID_SIZE
@@ -39,9 +61,10 @@ Hooks.once("dragRuler.ready", (SpeedProvider) => {
     const myCombatant = combat.combatants.find(combatant => combatant.tokenId === token._id);
     return myCombatant && combat.combatants
       .filter(combatant => {
-        if (combatant !== myCombatant && combatant.flags.ose.group !== myCombatant.flags.ose.group) {
+        if (combatant !== myCombatant
+            && combatant.flags.ose.group !== myCombatant.flags.ose.group) {
           const threatenedArea = getThreatenedArea(combatant.token);
-          return contains(threatenedArea, mySquare);
+          return contains(threatenedArea, mySquare) && ctx.canReach(token, target, ctx.walls);
         } else {
           return false;
         }
@@ -86,9 +109,13 @@ Hooks.once("dragRuler.ready", (SpeedProvider) => {
     getRanges(token) {
       const actorData = token.actor.getRollData();
       const ranges = [];
+      const context = {
+        canReach: this.getSetting("checkWalls" ? canReach : (_, _, _) => true,
+        walls: game.scenes.active.data.walls,
+      };
       if (game.combat) {
         let baseSpeed = actorData.movement.encounter;
-        if (isInMelee(token.data, game.combat)) {
+        if (isInMelee(token.data, game.combat, context)) {
           ranges.push({range: baseSpeed / 2, color: "encounter"});
           ranges.push({range: baseSpeed, color: "fighting-withdrawl"});
         } else {
