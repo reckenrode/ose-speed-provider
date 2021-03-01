@@ -69,6 +69,20 @@ Hooks.once("dragRuler.ready", (SpeedProvider) => {
       ];
     }
 
+    get settings() {
+      return [
+        {
+          id: "checkWalls",
+          name: "ose-speed-provider.settings.checkWalls.name",
+          hint: "ose-speed-provider.settings.checkWalls.hint",
+          scope: "world",
+          config: true,
+          type: Boolean,
+          default: true,
+        }
+      ];
+    }
+
     getRanges(token) {
       const actorData = token.actor.getRollData();
       const ranges = [];
