@@ -36,8 +36,8 @@ Hooks.once("dragRuler.ready", (SpeedProvider) => {
     for (let x = 0; x < token.width; ++x) {
       for (let y = 0; y < token.height; ++y) {
         centers.push([
-          token.x + GRID_HEIGHT / 2 + GRID_HEIGHT * x,
-          token.y + GRID_HEIGHT / 2 + GRID_HEIGHT * y,
+          token.x + GRID_SIZE / 2 + GRID_SIZE * x,
+          token.y + GRID_SIZE / 2 + GRID_SIZE * y,
         ]);
       }
     }
