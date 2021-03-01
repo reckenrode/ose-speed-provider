@@ -63,7 +63,8 @@ Hooks.once("dragRuler.ready", (SpeedProvider) => {
       .filter(combatant => {
         if (combatant !== myCombatant
             && combatant.flags.ose.group !== myCombatant.flags.ose.group) {
-          const threatenedArea = getThreatenedArea(combatant.token);
+          const target = combatant.token;
+          const threatenedArea = getThreatenedArea(target);
           return contains(threatenedArea, mySquare) && ctx.canReach(token, target, ctx.walls);
         } else {
           return false;
