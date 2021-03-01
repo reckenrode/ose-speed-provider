@@ -31,12 +31,13 @@ Hooks.once("dragRuler.ready", (SpeedProvider) => {
       || rect1[3] < rect2[1]);
   }
 
-  function getCenters(token) {
+  function getCenters(token, jitter) {
     const centers = [];
+    const jitters = jitter ? [0.1, -0.1] : [0];
     for (let x = 0; x < token.width; ++x) {
       for (let y = 0; y < token.height; ++y) {
-	[0.1, -0.1].forEach(jitterX => {
-	  [0.1, -0.1].forEach(jitterY => {
+	jitters.forEach(jitterX => {
+	  jitters.forEach(jitterY => {
             centers.push([
               jitterX + token.x + GRID_SIZE / 2 + GRID_SIZE * x,
               jitterY + token.y + GRID_SIZE / 2 + GRID_SIZE * y,
@@ -49,8 +50,8 @@ Hooks.once("dragRuler.ready", (SpeedProvider) => {
   }
 
   function canReach(token, target, walls) {
-    const tokenCenters = getCenters(token);
-    const targetCenters = getCenters(target);
+    const tokenCenters = getCenters(token, true);
+    const targetCenters = getCenters(target, false);
     const rays = tokenCenters.flatMap(c => targetCenters.map(t => Ray.fromArrays(c, t)));
     return rays.reduce((result, r) => {
       return result || !walls.reduce((result, w) => result || r.intersectSegment(w.c), false);
