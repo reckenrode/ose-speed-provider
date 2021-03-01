@@ -1,5 +1,11 @@
 {
   "ose-speed-provider": {
+    "settings": {
+      "checkWalls": {
+        "name": "Check walls",
+        "hint": "Take walls into account when checking whether a token is in melee"
+      }
+    },
     "speeds": {
       "base": "base movement speed",
       "encounter": "encounter movement speed",
