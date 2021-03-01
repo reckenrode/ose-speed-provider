@@ -110,7 +110,7 @@ Hooks.once("dragRuler.ready", (SpeedProvider) => {
       const actorData = token.actor.getRollData();
       const ranges = [];
       const context = {
-        canReach: this.getSetting("checkWalls" ? canReach : _ => true,
+        canReach: this.getSetting("checkWalls") ? canReach : _ => true,
         walls: game.scenes.active.data.walls,
       };
       if (game.combat) {
