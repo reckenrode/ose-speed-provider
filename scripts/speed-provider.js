@@ -35,10 +35,14 @@ Hooks.once("dragRuler.ready", (SpeedProvider) => {
     const centers = [];
     for (let x = 0; x < token.width; ++x) {
       for (let y = 0; y < token.height; ++y) {
-        centers.push([
-          token.x + GRID_SIZE / 2 + GRID_SIZE * x,
-          token.y + GRID_SIZE / 2 + GRID_SIZE * y,
-        ]);
+	[0.1, -0.1].forEach(jitterX => {
+	  [0.1, -0.1].forEach(jitterY => {
+            centers.push([
+              jitterX + token.x + GRID_SIZE / 2 + GRID_SIZE * x,
+              jitterY + token.y + GRID_SIZE / 2 + GRID_SIZE * y,
+            ]);
+	  });
+	});
       }
     }
     return centers;
